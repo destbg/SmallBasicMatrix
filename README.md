@@ -1,4 +1,4 @@
-# SmallBasicMatrix
+# Small Basic Matrix Screen
  Matrix code screen made with Small Basic
 
 ### Example
