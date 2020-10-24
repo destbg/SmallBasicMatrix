@@ -1,0 +1,90 @@
+GraphicsWindow.Title = "Matrix"
+GraphicsWindow.BackgroundColor = "Black"
+
+increment = 12
+dissapearAfter = increment * 40
+height = 720
+width = 1280
+count = 60
+numbersCount = 3
+i = 1
+rngChar = Text.GetCharacter(33)
+
+GraphicsWindow.Width = width + (increment * 2)
+GraphicsWindow.Height = height
+
+For i = 1 To count
+  For r = 1 To numbersCount
+    GetRandomCharacter()
+    numbers[i][r] = rngChar
+  EndFor
+  positionsY[i] = Math.GetRandomNumber(20) * (height + dissapearAfter) / 20
+  SetPositionXToRandom()
+EndFor
+
+While "True"
+  For i = 1 To count
+    numbers[i][3] = numbers[i][2]
+    numbers[i][2] = numbers[i][1]
+    GetRandomCharacter()
+    numbers[i][1] = rngChar
+    positionsY[i] = positionsY[i] + increment
+    If (positionsY[i] >= height + dissapearAfter) Then
+      positionsY[i] = 0
+      SetPositionXToRandom()
+    EndIf
+    color = 1
+    For g = numbersCount To 1 Step -1
+      If (g <> 1) Then
+        GraphicsWindow.BrushColor = "Black"
+        GraphicsWindow.FillRectangle(positionsX[i] - 5, positionsY[i] - g * increment, increment + 10, increment)
+      EndIf
+      If (color = 3) Then
+        GraphicsWindow.BrushColor = GraphicsWindow.GetColorFromRGB(255, 255, 255)
+      ElseIf (color = 2) Then
+        GraphicsWindow.BrushColor = GraphicsWindow.GetColorFromRGB(128, 255, 128)
+      Else
+        GraphicsWindow.BrushColor = GraphicsWindow.GetColorFromRGB(0, 128, 0)
+      EndIf
+      GraphicsWindow.DrawText(positionsX[i], positionsY[i] - g * increment, numbers[i][g])
+      color = color + 1
+    EndFor
+    For m = count / 20 To 2 Step -1
+      y = positionsY[i] - (m * (Math.GetRandomNumber(5) + 5)) * increment
+      GraphicsWindow.BrushColor = "Black"
+      GraphicsWindow.FillRectangle(positionsX[i] - 5, y, increment + 10, increment)
+      GraphicsWindow.BrushColor = GraphicsWindow.GetColorFromRGB(0, 128, 0)
+      GetRandomCharacter()
+      GraphicsWindow.DrawText(positionsX[i], y, rngChar)
+    EndFor
+    GraphicsWindow.BrushColor = "Black"
+    GraphicsWindow.FillRectangle(positionsX[i] - 5, positionsY[i] - dissapearAfter, increment + 10, increment)
+  EndFor
+EndWhile
+
+Sub SetPositionXToRandom
+  positionsX[i] = Math.GetRandomNumber(count) * width / count
+  loop = "True"
+  While (loop = "True")
+    freeStop = "True"
+    For h = 1 To count
+      If (h <> i And positionsX[h] = positionsX[i]) Then
+        freeStop = "False"
+        h = count
+      EndIf
+    EndFor
+    If (freeStop = "True") Then
+      loop = "False"
+    Else
+      positionsX[i] = Math.GetRandomNumber(count) * width / count
+    EndIf
+  EndWhile
+EndSub
+
+Sub GetRandomCharacter
+  rng = Math.GetRandomNumber(222) + 33
+  While (rng >= 48 And rng <= 66 Or rng >= 127 And rng <= 160 Or rng = 39 Or rng = 44 Or rng = 46 Or rng = 96 Or rng = 168 Or rng = 173 Or rng = 175 Or rng = 180 Or rng = 183 Or rng = 184)
+    rng = Math.GetRandomNumber(222) + 33
+  EndWhile
+  rngChar = Text.GetCharacter(rng)
+EndSub
